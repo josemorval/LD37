@@ -99,9 +99,9 @@ Shader "SpriteLightShader"
 
 				float2 centerSquare = float2(-.9,1.0);
 				float square = distance(IN.posWorld.xy,centerSquare);
-				square = 1.0-smoothstep(0.0,7.0,square);
+				square = 1.0-smoothstep(0.0,4.5,square);
 		
-				c.rgb *= _Switch*(angle*dis*cdis+0.5*square);
+				c.rgb *= 1.0*(angle*dis*cdis+0.5*square);
 				c.rgb *= c.a;
 				return c;
 			}
