@@ -36,6 +36,6 @@ public class MeshCreation : MonoBehaviour {
 		}
 
 		mesh.SetVertices(vs);
-		mesh.SetIndices(inds.ToArray(),MeshTopology.LineStrip,0);
+		mesh.SetIndices(inds.ToArray(),MeshTopology.Triangles,0);
 	}
 }
