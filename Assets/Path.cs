@@ -12,6 +12,9 @@ public class Path : MonoBehaviour {
 	[Header("List of positions inbetween")]
 	public List<Vector2> positions;
 
+	[Header("Is the path visible?")]
+	public bool isDiscovered;
+
 	public Material mat;
 
 	List<Vector3> vs;
@@ -19,7 +22,7 @@ public class Path : MonoBehaviour {
 	Mesh mesh;
 
 	// Use this for initialization
-	public void Start () {
+	public void StartComponent () {
 		vs = new List<Vector3>();
 		order = new List<int>();
 		mesh = new Mesh();
@@ -27,9 +30,17 @@ public class Path : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	public void Update () {
-		UpdateMesh ();
-		Graphics.DrawMesh(mesh,transform.localToWorldMatrix,mat,0);
+	public void UpdateComponent () {
+		//If path is not visible, we disable mesh render on start and end nodes and not draw the mesh path
+		if (isDiscovered) {
+			nodeStart.isVisible= true;
+			nodeEnd.isVisible = true;
+
+			UpdateMesh ();
+			Graphics.DrawMesh (mesh, transform.localToWorldMatrix, mat, 0);
+		} else {
+		}
+
 	}
 
 	void UpdateMesh(){
