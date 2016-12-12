@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -45,6 +46,14 @@ public class GameManager : MonoBehaviour {
 			}
 		//}
 
+		if(nodes[0].hasPackage){
+
+			int indexNextScene = SceneManager.GetActiveScene().buildIndex+1+SceneManager.sceneCountInBuildSettings;
+			indexNextScene%=SceneManager.sceneCountInBuildSettings;
+			SceneManager.LoadScene(indexNextScene);
+
+		}
+
 
 	
 	}
@@ -61,9 +70,12 @@ public class GameManager : MonoBehaviour {
 				//Actualizo terminal manager
 				//Paso a 1
 
-				nearCurrentNode = GetNearNodes();
+				nodeSelected.neighNodes = GetNearNodes();
+				nodeSelected.hasUsedInspect = true;
+				nearCurrentNode = nodeSelected.neighNodes;
 				terminalManager.UpdateNodesToVisit();
 				terminalManager.ChangeScreen(1);
+
 				gameState = 1;
 
 			}else if(terminalManager.currentOption.name=="check"){
@@ -75,6 +87,8 @@ public class GameManager : MonoBehaviour {
 
 				//Voy a 2
 
+				nearCurrentNode = nodeSelected.neighNodes;
+				terminalManager.UpdateNodesToVisit();
 				terminalManager.ChangeScreen(1);
 				gameState = 2;
 
@@ -85,6 +99,7 @@ public class GameManager : MonoBehaviour {
 
 			nodeSelected = nearCurrentNode[terminalManager.currentOptionIndex];
 			terminalManager.ChangeScreen(0);
+			terminalManager.SetName("bill@"+nodeSelected.name);
 			gameState = 0;
 
 			break;
@@ -119,9 +134,11 @@ public class GameManager : MonoBehaviour {
 		for(int i=0;i<paths.Count;i++){
 			if(paths[i].nodes[0]==nodeSelected){
 				ns.Add(paths[i].nodes[1]);
+				paths[i].nodes[1].AddNode(nodeSelected);
 				paths[i].gameObject.SetActive(true);
 			}else if(paths[i].nodes[1]==nodeSelected){
 				ns.Add(paths[i].nodes[0]);
+				paths[i].nodes[0].AddNode(nodeSelected);
 				paths[i].gameObject.SetActive(true);
 			}
 		}

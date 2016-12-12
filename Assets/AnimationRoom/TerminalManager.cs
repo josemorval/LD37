@@ -90,7 +90,11 @@ public class TerminalManager : MonoBehaviour {
 			currentOption = currentScreen.transform.GetChild(currentOptionIndex).gameObject;
 
 		}
+	}
+  
 
+	public void SetName(string s){
+		transform.GetChild(0).transform.GetChild(0).GetComponent<TextMesh>().text = s;
 	}
 
 
