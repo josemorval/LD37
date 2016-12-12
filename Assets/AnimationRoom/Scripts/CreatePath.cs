@@ -6,7 +6,7 @@ using UnityEngine;
 public class CreatePath : MonoBehaviour {
 
 	public float widthLine;
-	public List<Vector2> uvs;
+	List<Vector2> uvs;
 	List<Vector3> vs;
 	List<Vector3> nodeTransforms;
 	List<int> inds;

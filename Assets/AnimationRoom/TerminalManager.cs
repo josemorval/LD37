@@ -4,21 +4,59 @@ using UnityEngine;
 
 public class TerminalManager : MonoBehaviour {
 
-	//public GameManager gm;
+	public GameManager gameManager;
+
 	public Color activated;
 	public Color deactivated;
 
 	public GameObject[] screens;
-	GameObject currentScreen;
+	public GameObject currentScreen;
+	public GameObject currentOption;
 
-	int currentScreenIndex = 0;
-	int currentOptionIndex = 0;
+	public int currentScreenIndex = 0;
+	public int currentOptionIndex = 0;
 
 	void Start () {
-		ResetScreen(0);
+		ChangeScreen(0);
 	}
 
-	void ResetScreen(int k){
+	public void ChangeElement(int i){
+
+		if(currentScreenIndex==0){
+			
+			currentScreen.transform.GetChild(currentOptionIndex).GetComponent<SpriteRenderer>().color = deactivated;
+			currentOptionIndex+=i+screens[currentScreenIndex].transform.childCount;
+			currentOptionIndex%=screens[currentScreenIndex].transform.childCount;
+			currentScreen.transform.GetChild(currentOptionIndex).GetComponent<SpriteRenderer>().color = activated;
+			currentOption = currentScreen.transform.GetChild(currentOptionIndex).gameObject;
+
+		}else if(currentScreenIndex==1){
+			currentScreen.transform.GetChild(currentOptionIndex).GetComponent<SpriteRenderer>().color = deactivated;
+			currentOptionIndex+=i+gameManager.nearCurrentNode.Count;
+			currentOptionIndex%=gameManager.nearCurrentNode.Count;
+			currentScreen.transform.GetChild(currentOptionIndex).GetComponent<SpriteRenderer>().color = activated;
+			currentOption = currentScreen.transform.GetChild(currentOptionIndex).gameObject;
+		}
+
+
+	}
+
+	public void UpdateNodesToVisit(){
+
+		GameObject g;
+
+		for(int i=0;i<screens[1].transform.childCount;i++){
+			g = screens[1].transform.GetChild(i).gameObject;
+			g.SetActive(i<gameManager.nearCurrentNode.Count);
+
+			if(i<gameManager.nearCurrentNode.Count){
+				g.transform.GetChild(0).GetComponent<TextMesh>().text = gameManager.nearCurrentNode[i].name;
+			}
+		}
+
+	}
+
+	public void ChangeScreen(int k){
 
 		currentScreenIndex = k;
 		currentOptionIndex = 0;
@@ -28,36 +66,31 @@ public class TerminalManager : MonoBehaviour {
 			screens[i].SetActive(i==currentScreenIndex);
 		}
 
-		for(int i=0;i<screens[currentScreenIndex].transform.childCount;i++){
-			if(i!=currentOptionIndex){
-				currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = deactivated;
-			}else{
-				currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = activated;
+		if(k==1){
+			for(int i=0;i<gameManager.nearCurrentNode.Count;i++){
+				if(i!=currentOptionIndex){
+					currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = deactivated;
+				}else{
+					currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = activated;
+				}
 			}
+
+			currentOption = currentScreen.transform.GetChild(currentOptionIndex).gameObject;
+
+		}else if(k==0){
+
+			for(int i=0;i<screens[currentScreenIndex].transform.childCount;i++){
+				if(i!=currentOptionIndex){
+					currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = deactivated;
+				}else{
+					currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = activated;
+				}
+			}
+
+			currentOption = currentScreen.transform.GetChild(currentOptionIndex).gameObject;
+
 		}
-	}
-	
-	void Update () {
 
-		if(Input.GetKeyDown(KeyCode.UpArrow)){
-			ChangeElement(-1);
-		}else if(Input.GetKeyDown(KeyCode.DownArrow)){
-			ChangeElement(1);
-		}else if(Input.GetKeyDown(KeyCode.Return)){
-			currentScreenIndex++;
-			currentScreenIndex+=screens.Length;
-			currentScreenIndex%=screens.Length;
-
-			ResetScreen(currentScreenIndex);
-		}
-		
-	}
-
-	void ChangeElement(int i){
-		currentScreen.transform.GetChild(currentOptionIndex).GetComponent<SpriteRenderer>().color = deactivated;
-		currentOptionIndex+=(i+currentScreen.transform.childCount);
-		currentOptionIndex%=currentScreen.transform.childCount;
-		currentScreen.transform.GetChild(currentOptionIndex).GetComponent<SpriteRenderer>().color = activated;
 	}
 
 

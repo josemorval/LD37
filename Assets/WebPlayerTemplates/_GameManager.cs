@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class _GameManager : MonoBehaviour {
 
 	public List<Level> levels;
 	public int activeLevel;
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if(Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)){
-			int active = option % nodeEnds.Count;
+			int active = (option + 0*nodeEnds.Count) % nodeEnds.Count;
 
 			nodeEnds [active].GetComponent<MeshRenderer> ().material.SetColor ("_Color", Color.white);
 			option +=1;
