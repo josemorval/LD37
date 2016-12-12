@@ -10,6 +10,7 @@ public class TerminalManager : MonoBehaviour {
 	public Color deactivated;
 
 	public GameObject[] screens;
+
 	public GameObject currentScreen;
 	public GameObject currentOption;
 
@@ -95,6 +96,16 @@ public class TerminalManager : MonoBehaviour {
 
 	public void SetName(string s){
 		transform.GetChild(0).transform.GetChild(0).GetComponent<TextMesh>().text = s;
+	}
+
+	public void SetLoadingScreen(string s){
+		screens[2].transform.GetChild(0).GetComponent<TextMesh>().text = s;
+	}
+
+	public void SetPercentVal(float f){
+		Vector3 v = screens[2].transform.GetChild(1).GetChild(0).transform.localScale;
+		v.x = f;
+		screens[2].transform.GetChild(1).GetChild(0).transform.localScale = v;
 	}
 
 

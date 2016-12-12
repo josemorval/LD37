@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour {
 	//2 - node to send file
 
 	int gameState = 0;
+	bool someTimeAction = false;
+
 
 	void Awake(){
 
@@ -36,7 +38,7 @@ public class GameManager : MonoBehaviour {
 
 	void Update () {
 
-		//if(!someTimeAction){
+		if(!someTimeAction){
 			if(Input.GetKeyDown(KeyCode.Return)){
 				CheckEnter();
 			}else if(Input.GetKeyDown(KeyCode.UpArrow)){
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour {
 			}else if(Input.GetKeyDown(KeyCode.DownArrow)){
 				CheckDown();
 			}
-		//}
+		}
 
 		if(nodes[0].hasPackage){
 
@@ -83,14 +85,16 @@ public class GameManager : MonoBehaviour {
 				//Activo boton send si esta el fichero
 				//Me quedo en 0
 
-			}else if(terminalManager.currentOption.name=="send"){
-
-				//Voy a 2
-
-				nearCurrentNode = nodeSelected.neighNodes;
-				terminalManager.UpdateNodesToVisit();
-				terminalManager.ChangeScreen(1);
-				gameState = 2;
+				if(terminalManager.currentOption.transform.GetChild(1).gameObject.activeInHierarchy){
+					terminalManager.currentOption.transform.GetChild(1).gameObject.SetActive(false);
+					nearCurrentNode = nodeSelected.neighNodes;
+					terminalManager.UpdateNodesToVisit();
+					gameState = 2;
+					terminalManager.ChangeScreen(1);
+				}else{
+					someTimeAction = true;
+					StartCoroutine(CheckFileCoroutine());
+				}
 
 			}
 
@@ -104,12 +108,9 @@ public class GameManager : MonoBehaviour {
 
 			break;
 		case 2:
-
-
-			nearCurrentNode[terminalManager.currentOptionIndex].hasPackage = true;
-			nodeSelected.hasPackage = false;
-			terminalManager.ChangeScreen(0);
-			gameState = 0;
+			
+			someTimeAction = true;
+			StartCoroutine(SendFileCoroutine());
 
 			break;
 		default:
@@ -145,5 +146,58 @@ public class GameManager : MonoBehaviour {
 
 		return ns;
 
+	}
+
+	IEnumerator CheckFileCoroutine(){
+
+		terminalManager.ChangeScreen(2);
+		float time = 0f;
+		float maxTime = 2f;
+		terminalManager.SetLoadingScreen("Checking file system...");
+		terminalManager.SetPercentVal(0f);
+
+		while(time<maxTime){
+
+			terminalManager.SetPercentVal(time/maxTime);
+
+			time+=Time.deltaTime;
+			yield return null;
+		}
+			
+
+		if(nodeSelected.hasPackage){
+			terminalManager.currentOption.transform.GetChild(1).gameObject.SetActive(true);
+		}else{
+			terminalManager.SetLoadingScreen("Not file found");
+			yield return new WaitForSeconds(1.5f);
+		}
+
+		terminalManager.ChangeScreen(0);
+		someTimeAction = false;
+
+	}
+
+	IEnumerator SendFileCoroutine(){
+
+		terminalManager.ChangeScreen(2);
+		float time = 0f;
+		float maxTime = 2f;
+		terminalManager.SetLoadingScreen("Sending file to " + nearCurrentNode[terminalManager.currentOptionIndex].name + " machine...");
+		terminalManager.SetPercentVal(0f);
+
+		while(time<maxTime){
+
+			terminalManager.SetPercentVal(time/maxTime);
+
+			time+=Time.deltaTime;
+			yield return null;
+		}
+
+		nearCurrentNode[terminalManager.currentOptionIndex].hasPackage = true;
+		nodeSelected.hasPackage = false;
+		terminalManager.ChangeScreen(0);
+		gameState = 0;
+
+		someTimeAction = false;
 	}
 }

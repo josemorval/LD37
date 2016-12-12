@@ -7,6 +7,7 @@ public class Node : MonoBehaviour {
 	public string name;
 	public bool hasPackage;
 
+
 	public List<Node> neighNodes;
 	public bool hasUsedInspect;
 
