@@ -7,6 +7,7 @@ Shader "SpriteLightShader"
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
+		_Switch ("Switch",Float) = 1
 	}
 
 	SubShader
@@ -101,7 +102,7 @@ Shader "SpriteLightShader"
 				float square = distance(IN.posWorld.xy,centerSquare);
 				square = 1.0-smoothstep(0.0,4.5,square);
 		
-				c.rgb *= 1.0*(angle*dis*cdis+0.5*square);
+				c.rgb *= _Switch*(angle*dis*cdis+0.5*square);
 				c.rgb *= c.a;
 				return c;
 			}
