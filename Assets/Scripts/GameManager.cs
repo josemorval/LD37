@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour {
 			break;
 		case 1:
 
-			nodeSelected = nearCurrentNode[terminalManager.currentOptionIndex];
+			nodeSelected = nodeSelected.neighNodes[terminalManager.currentOptionIndex];
 			terminalManager.ChangeScreen(0);
 			terminalManager.SetName(nodeSelected.name);
 			gameState = 0;
@@ -216,6 +216,8 @@ public class GameManager : MonoBehaviour {
 
 
 	IEnumerator InspectCoroutine(){
+
+		terminalManager.currentOption.transform.parent.GetChild(1).transform.GetChild(0).GetComponent<TextMesh>().text="check file";
 
 		nodeSelected.neighNodes = GetNearNodes(false);
 		nodeSelected.hasUsedInspect = true;
@@ -289,6 +291,9 @@ public class GameManager : MonoBehaviour {
 
 	IEnumerator SendFileCoroutine(){
 
+		nearCurrentNode[terminalManager.currentOptionIndex].hasPackage = true;
+		nodeSelected.hasPackage = false;
+
 		terminalManager.ChangeScreen(2);
 		float time = 0f;
 		float maxTime = TIME_PER_UNIT_TRANSFER_FILE*GetPathWithNodes(nodeSelected,nearCurrentNode[terminalManager.currentOptionIndex]).GetLength();
@@ -307,8 +312,7 @@ public class GameManager : MonoBehaviour {
 		terminalManager.SetPercentVal(1f);
 
 
-		nearCurrentNode[terminalManager.currentOptionIndex].hasPackage = true;
-		nodeSelected.hasPackage = false;
+
 		terminalManager.ChangeScreen(0);
 		gameState = 0;
 

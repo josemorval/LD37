@@ -60,7 +60,6 @@ public class TerminalManager : MonoBehaviour {
 	public void ChangeScreen(int k){
 
 		currentScreenIndex = k;
-		currentOptionIndex = 0;
 		currentScreen = screens[currentScreenIndex];
 
 		for(int i=0;i<screens.Length;i++){
@@ -68,6 +67,8 @@ public class TerminalManager : MonoBehaviour {
 		}
 
 		if(k==1){
+			currentOptionIndex = 0;
+
 			for(int i=0;i<gameManager.nearCurrentNode.Count;i++){
 				if(i!=currentOptionIndex){
 					currentScreen.transform.GetChild(i).GetComponent<SpriteRenderer>().color = deactivated;
@@ -79,6 +80,7 @@ public class TerminalManager : MonoBehaviour {
 			currentOption = currentScreen.transform.GetChild(currentOptionIndex).gameObject;
 
 		}else if(k==0){
+			currentOptionIndex = 0;
 
 			for(int i=0;i<screens[currentScreenIndex].transform.childCount;i++){
 				if(i!=currentOptionIndex){
